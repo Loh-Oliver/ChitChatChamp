@@ -3,9 +3,9 @@ import './App.css';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { useSpeechSynthesis } from 'react-speech-kit'; // Import text-to-speech library
-const API_KEY = "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";
+const API_KEY = "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";
 
-const systemMessage = { "role": "system", "content": "Explain things like you're talking to a software professional with 2 years of experience." };
+const systemMessage = { "role": "system", "content": "Explain things like you're a language teacher trying to teach someone a language." };
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -61,9 +61,16 @@ function App() {
         body: JSON.stringify(apiRequestBody)
       });
 
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
       const data = await response.json();
+      console.log(data); // Check the response data structure
+      const generatedMessage = data.choices[0].message.content;
+
       setMessages([...chatMessages, {
-        message: data.choices[0].message.content,
+        message: generatedMessage,
         sender: "ChatGPT"
       }]);
     } catch (error) {

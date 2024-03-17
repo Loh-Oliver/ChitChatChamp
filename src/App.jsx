@@ -3,22 +3,29 @@ import './App.css';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from '@chatscope/chat-ui-kit-react';
 import { useSpeechSynthesis } from 'react-speech-kit'; // Import text-to-speech library
-const API_KEY = "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";
+const API_KEY = "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";
 
-const systemMessage = { "role": "system", "content": "Explain things like you're a language teacher trying to teach someone a language." };
+const systemMessage = { "role": "system", "content": "Start with English and ask student what they want to practice at the beginning. You are a language teacher trying to help a student practice language. Point out grammatical, vocabulary and spelling errors. When conversing in a language other than English, automatically include the English translation." };
 
 function App() {
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
-  const { speak } = useSpeechSynthesis(); // Get speak function from text-to-speech library
+  const { speak, cancel } = useSpeechSynthesis(); // Destructure the speak and cancel functions
+  const [speaking, setSpeaking] = useState(false); // Initialize speaking state
   const speakMessage = (text) => {
-    speak({ text });
+    if (speaking) {
+      cancel(); // Stop speaking if already speaking
+      setSpeaking(false); // Reset speaking state
+    } else {
+      speak({ text }); // Speak the message
+      setSpeaking(true); // Update speaking state
+    }
   };
   useEffect(() => {
     if (!initialMessageSent) {
       // Send the initial message only once upon component initialization
-      sendMessageToChatGPT("Start a basic conversation with me in English to practice my Language");
+      sendMessageToChatGPT("Hi Chimp!");
       setInitialMessageSent(true);
     }
   }, [initialMessageSent]);
@@ -91,7 +98,7 @@ function App() {
           <ChatContainer>
             <MessageList
               scrollBehavior="smooth"
-              typingIndicator={isTyping ? <TypingIndicator content="ChatGPT is typing" /> : null}
+              typingIndicator={isTyping ? <TypingIndicator content="Chimp is typing" /> : null}
             >
               {messages.map((message, i) => {
                 // Skip rendering initial message
@@ -101,7 +108,9 @@ function App() {
                 return (
                   <div key={i}>
                     <Message model={message} />
-                    <button onClick={() => speakMessage(message.message)}>Speak</button> {/* Add button to speak message */}
+                    <button onClick={() => speakMessage(message.message)}>
+                      {speaking ? 'Stop Speaking' : 'Speak'}
+                    </button>
                   </div>
                 );
               })}

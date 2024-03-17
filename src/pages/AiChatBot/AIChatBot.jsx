@@ -10,9 +10,9 @@ import {
   TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 import { useSpeechSynthesis } from "react-speech-kit"; // Import text-to-speech library
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import Navbar from "../Global/Navbar";
 import Footer from "../Global/Footer";
+import { useParams } from 'react-router-dom';
 const API_KEY = "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";
 
 const systemMessage = {
@@ -22,6 +22,7 @@ const systemMessage = {
 };
 
 function AIChatBot() {
+  const { language } = useParams(); // Get the language parameter from the URL
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
@@ -112,9 +113,9 @@ function AIChatBot() {
     <div className="AIChatBot">
       <Navbar />
       <div className="chat-header">
-        <div className="chat-title">AI Chatbot</div>
+        <div className="chat-title">AI Chatbot ({language})</div>
       </div>
-      <div className="chat-window"style={{ position: "relative", height: "800px", width: "700px" }}>
+      <div className="chat"style={{ position: "relative", height: "800px", width: "700px" }}>
     
           <MainContainer>
             <ChatContainer>

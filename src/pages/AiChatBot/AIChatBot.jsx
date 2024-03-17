@@ -12,16 +12,12 @@ import {
 import { useSpeechSynthesis } from "react-speech-kit"; // Import text-to-speech library
 import Navbar from "../Global/Navbar";
 import Footer from "../Global/Footer";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 const API_KEY = "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";
 
-const systemMessage = {
-  role: "system",
-  content:
-    "Start with English and ask student what they want to practice at the beginning. You are a language teacher trying to help a student practice language. Point out grammatical, vocabulary and spelling errors. When conversing in a language other than English, automatically include the English translation.",
-};
-
 function AIChatBot() {
+ 
+  
   const { language } = useParams(); // Get the language parameter from the URL
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -37,6 +33,12 @@ function AIChatBot() {
       setSpeaking(true); // Update speaking state
     }
   };
+
+  const systemMessage = {
+    role: "system",
+    content: `Start with ${language}  and ask the student what they want to practice at the beginning. You are a language teacher trying to help a student practice language. Point out grammatical, vocabulary, and spelling errors. When conversing in a language other than English, automatically include the English translation.`,
+  };
+
   useEffect(() => {
     if (!initialMessageSent) {
       // Send the initial message only once upon component initialization
@@ -115,41 +117,38 @@ function AIChatBot() {
       <div className="chat-header">
         <div className="chat-title">AI Chatbot ({language})</div>
       </div>
-      <div className="chat"style={{ position: "relative", height: "800px", width: "700px" }}>
-    
-          <MainContainer>
-            <ChatContainer>
-              <MessageList
-                scrollBehavior="smooth"
-                typingIndicator={
-                  isTyping ? (
-                    <TypingIndicator content="Chimp is typing" />
-                  ) : null
+      <div
+        className="chat"
+        style={{ position: "relative", height: "800px", width: "700px" }}
+      >
+        <MainContainer>
+          <ChatContainer>
+            <MessageList
+              scrollBehavior="smooth"
+              typingIndicator={
+                isTyping ? <TypingIndicator content="Chimp is typing" /> : null
+              }
+            >
+              {messages.map((message, i) => {
+                // Skip rendering initial message
+                if (!initialMessageSent && i === 0) {
+                  return null;
                 }
-              >
-                {messages.map((message, i) => {
-                  // Skip rendering initial message
-                  if (!initialMessageSent && i === 0) {
-                    return null;
-                  }
-                  return (
-                    <div key={i}>
-                      <Message model={message} />
-                      <button onClick={() => speakMessage(message.message)}>
-                        {speaking ? "Stop Speaking" : "Speak"}
-                      </button>
-                    </div>
-                  );
-                })}
-              </MessageList>
-              <MessageInput
-                placeholder="Type message here"
-                onSend={handleSend}
-              />
-            </ChatContainer>
-          </MainContainer>
-        </div>
-     
+                return (
+                  <div key={i}>
+                    <Message model={message} />
+                    <button onClick={() => speakMessage(message.message)}>
+                      {speaking ? "Stop Speaking" : "Speak"}
+                    </button>
+                  </div>
+                );
+              })}
+            </MessageList>
+            <MessageInput placeholder="Type message here" onSend={handleSend} />
+          </ChatContainer>
+        </MainContainer>
+      </div>
+
       <Footer />
     </div>
   );

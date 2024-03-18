@@ -33,6 +33,7 @@ const StandardMessageForm = ({ props, activeChat }) => {
       handleChange={handleChange}
       handleSubmit={handleSubmit}
     />
+    
   );
 };
 

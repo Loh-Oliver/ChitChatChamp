@@ -9,7 +9,8 @@ import StandardMessageForm from "@/components/customMessageForms/StandardMessage
 import Ai from "@/components/customMessageForms/Ai";
 import AiCode from "@/components/customMessageForms/AiCode";
 import AiAssist from "@/components/customMessageForms/AiAssist";
-
+import Navbar from "../global/Navbar"
+import Footer from "../global/Footer"
 const Chat = ({ user, secret }) => {
   
   const chatProps = useMultiChatLogic(
@@ -21,8 +22,9 @@ const Chat = ({ user, secret }) => {
  
 
   return (
-   
+ 
     <div style={{ flexBasis: "100%" }}>
+      
       <MultiChatSocket {...chatProps} />
       <MultiChatWindow
         {...chatProps}

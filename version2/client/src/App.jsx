@@ -2,6 +2,10 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Chat from "@/components/chat";
 import Login from "@/components/login";
+import Home from "../src/components/homePage/homePage"
+import Language from "../src/components/selectLangauge/LanguageSelection"
+import SelectChat from "../src/components/selectChat/selectChat"
+import AiChatBot from "../src/components/AiChatBot/AIChatBot"
 
 function App() {
   const [user, setUser] = useState(null);
@@ -12,11 +16,13 @@ function App() {
     <div className="app">
       <BrowserRouter>
         <Routes>
+        <Route path="/" element={<Home/>}/>
+        <Route path="/AiChatBot" element={<AiChatBot/>}/>
           <Route
-            path="/"
+            path="/login"
             element={
               isAuth ? (
-                <Navigate to="/chat" />
+                <Navigate to="/selectChat" />
               ) : (
                 <Login setUser={setUser} setSecret={setSecret} />
               )
@@ -32,6 +38,8 @@ function App() {
               )
             }
           />
+          <Route path="/languageSelection" element={<Language/>}/>
+          <Route path="/selectChat" element={<SelectChat/>}/>
         </Routes>
       </BrowserRouter>
     </div>

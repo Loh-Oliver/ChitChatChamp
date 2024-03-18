@@ -1,0 +1,155 @@
+/* HomePage.css */
+
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  font-size: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Styles */
+.home-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+/* Header Styles */
+.header {
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+  /* HomePage.css */
+  
+  
+
+/* Main Content Styles */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+/* Hero Section Styles */
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.hero-content {
+  flex: 1;
+}
+
+.hero-heading {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.get-started-button {
+  padding: 10px 20px;
+  background-color: #009688;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.get-started-button:hover {
+  background-color: #00796b;
+}
+
+.hero-image {
+  flex: 1;
+  text-align: center;
+}
+
+.hero-image img {
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Feature Section Styles */
+.feature-section {
+  margin-bottom: 40px;
+}
+
+.feature-heading {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-between;
+}
+
+.feature {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.feature-description {
+  color: #666666;
+}
+
+/* Call-to-Action Section Styles */
+.cta-section {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.cta-heading {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.cta-description {
+  font-size: 1.1rem;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+.cta-button {
+  padding: 15px 30px;
+  background-color: #009688;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #00796b;
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #f4f4f4;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.footer-text {
+  color: #666666;
+}

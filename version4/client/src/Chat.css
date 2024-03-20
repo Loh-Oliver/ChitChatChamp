@@ -1,0 +1,7 @@
+.button-suggest-1,
+.button-suggest-2,
+.button-suggest-3 {
+  display: block;
+  margin-bottom: 5px; /* Adjust as needed to add space between buttons */
+  width: 100%
+}

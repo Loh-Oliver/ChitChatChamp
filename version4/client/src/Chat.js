@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-
+import "./Chat.css";
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
@@ -29,6 +29,14 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
+  const sendSuggestionMessage = (event) => {
+    // Get the message from the data attribute of the clicked button
+    const message = event.target.dataset.message;
+
+    // Do whatever you need with the message
+    setCurrentMessage(message);
+  };
+
   return (
     <div className="chat-window">
       <div className="chat-header">
@@ -49,6 +57,16 @@ function Chat({ socket, username, room }) {
                   <div className="message-meta">
                     <p id="time">{messageContent.time}</p>
                     <p id="author">{messageContent.author}</p>
+                    <button
+                      className="button-speak"
+                      onClick={sendSuggestionMessage}
+                      data-message={messageContent.message} // Store the message as a data attribute
+                    >
+                      4
+                    </button>
+
+                    <button className="button-translate">Speak</button>
+                    <button className="button-suggest">Speak</button>
                   </div>
                 </div>
               </div>
@@ -70,6 +88,9 @@ function Chat({ socket, username, room }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
+      <button className="button-suggest-1">{currentMessage}</button>
+      <button className="button-suggest-2">Speak</button>
+      <button className="button-suggest-3">Speak</button>
     </div>
   );
 }

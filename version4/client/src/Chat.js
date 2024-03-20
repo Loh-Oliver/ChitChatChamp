@@ -4,6 +4,7 @@ import "./Chat.css";
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const synth = window.speechSynthesis;
 
   const sendMessage = async () => {
     if (currentMessage !== "") {
@@ -29,12 +30,17 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
+  //generate suggestion
   const sendSuggestionMessage = (event) => {
-    // Get the message from the data attribute of the clicked button
-    const message = event.target.dataset.message;
-
     // Do whatever you need with the message
+    const message = event.target.dataset.message;
     setCurrentMessage(message);
+  };
+
+  //Text to spech
+  const speakMessage = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
   };
 
   return (
@@ -59,14 +65,19 @@ function Chat({ socket, username, room }) {
                     <p id="author">{messageContent.author}</p>
                     <button
                       className="button-speak"
-                      onClick={sendSuggestionMessage}
-                      data-message={messageContent.message} // Store the message as a data attribute
+                      onClick={() => speakMessage(messageContent.message)}
                     >
-                      4
+                      Speak
                     </button>
 
-                    <button className="button-translate">Speak</button>
-                    <button className="button-suggest">Speak</button>
+                    <button className="button-translate">Translate</button>
+                    <button
+                      className="button-suggest"
+                      onClick={sendSuggestionMessage}
+                      data-message={messageContent.message}
+                    >
+                      Suggest
+                    </button>
                   </div>
                 </div>
               </div>

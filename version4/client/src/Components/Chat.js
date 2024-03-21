@@ -3,7 +3,6 @@ import ScrollToBottom from "react-scroll-to-bottom";
 import "./Chat.css";
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
-  const [translated, setTranslated] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));

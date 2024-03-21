@@ -14,7 +14,7 @@ import Navbar from "../Global/Navbar";
 import Footer from "../Global/Footer";
 import { useParams } from "react-router-dom";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 
 
@@ -23,10 +23,11 @@ function AIChatBot() {
   const systemMessage = {
     role: "system",
     content:
-      `Start with ${language} and ask student what they want to practice at the beginning. You are a language teacher trying to help a student practice language. Point out grammatical, vocabulary and spelling errors. When conversing in a language other than English, automatically include the English translation.`,
+      `Start with ${language} and ask student what they want to practice at the beginning. You are a language teacher trying to help a student practice language. Point out grammatical, vocabulary and spelling errors. Chat in the language that the student is learning and provide English translation.`,
   };
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [suggestion, setSuggestion] = useState(true);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const { speak, cancel } = useSpeechSynthesis(); // Destructure the speak and cancel functions
   const [speaking, setSpeaking] = useState(false); // Initialize speaking state
@@ -39,67 +40,114 @@ function AIChatBot() {
       setSpeaking(true); // Update speaking state
     }
   };
+
   useEffect(() => {
+    console.log("Sending initial message...");
     if (!initialMessageSent) {
       // Send the initial message only once upon component initialization
-      sendMessageToChatGPT("Hi Chimp!");
+      sendMessageToChatGPT("Hi Chimp!"); // Pass false to avoid displaying the initial message
       setInitialMessageSent(true);
     }
-  }, [initialMessageSent]);
+  }, []); // Empty dependency array to ensure the effect runs only once
+
+  useEffect(() => {
+    // Function to generate reply suggestions
+    const generateReplySuggestions = async () => {
+      setSuggestion(false);
+      await sendMessageToChatGPT("System: Give the user 3 reply suggestions");
+    };
+  
+    // Timer logic
+    let timeoutId;
+  if (!isTyping && messages.length > 0 && suggestion) {
+    // Start the timer
+    timeoutId = setTimeout(() => {
+      generateReplySuggestions();
+    }, 10000); // 10 seconds timeout
+  } else if (isTyping && messages.length > 0) {
+    // Restart the timer if the user starts typing again
+    clearTimeout(timeoutId); // Clear the existing timer
+    timeoutId = setTimeout(() => {
+      generateReplySuggestions();
+    }, 10000); // Restart the timer
+  }
+
+  // Cleanup the timer if user starts typing
+  return () => {
+    clearTimeout(timeoutId);
+  };
+  }, [isTyping, messages]);
+  
   const sendMessageToChatGPT = async (message) => {
     const newMessage = {
-      message,
-      direction: "outgoing",
-      sender: "user",
+        message,
+        direction: "outgoing",
+        sender: "user",
     };
-    const newMessages = [...messages, newMessage];
+    const newMessages = [...messages, newMessage]; // Append the new message
     setMessages(newMessages);
     setIsTyping(true);
     await processMessageToChatGPT(newMessages);
-  };
+};
+
+  
+
   async function processMessageToChatGPT(chatMessages) {
     let apiMessages = chatMessages.map((messageObject) => {
-      let role = messageObject.sender === "ChatGPT" ? "assistant" : "user";
-      return { role: role, content: messageObject.message };
+        let role = messageObject.sender === "ChatGPT" ? "assistant" : "user";
+        return { role: role, content: messageObject.message };
     });
     const apiRequestBody = {
-      model: "gpt-3.5-turbo",
-      messages: [systemMessage, ...apiMessages],
+        model: "gpt-3.5-turbo",
+        messages: [systemMessage, ...apiMessages],
     };
     try {
-      const response = await fetch(
-        "https://api.openai.com/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + API_KEY,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(apiRequestBody),
+        const response = await fetch(
+            "https://api.openai.com/v1/chat/completions",
+            {
+                method: "POST",
+                headers: {
+                    Authorization: "Bearer " + API_KEY,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(apiRequestBody),
+            }
+        );
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
         }
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      console.log(data); // Check the response data structure
-      const generatedMessage = data.choices[0].message.content;
-      setMessages([
-        ...chatMessages,
-        {
-          message: generatedMessage,
-          sender: "ChatGPT",
-        },
-      ]);
+        const data = await response.json();
+        console.log(data); // Check the response data structure
+
+        // Append only the first choice for the first prompt
+        const generatedMessage = data.choices[0].message.content;
+        const newMessages = [
+            ...chatMessages,
+            {
+                message: generatedMessage,
+                sender: "ChatGPT",
+            },
+        ];
+        setMessages(newMessages);
+
+        // Generate reply suggestions for subsequent prompts
+        if (chatMessages.length > 0) {
+            generateReplySuggestions();
+        }
     } catch (error) {
-      console.error("Error processing message:", error);
+        console.error("Error processing message:", error);
     } finally {
-      setIsTyping(false);
+        setIsTyping(false);
     }
   }
+  
+  
+
   const handleSend = (message) => {
     sendMessageToChatGPT(message);
+    setSuggestion(true)
   };
+  
   return (
     <div className="App">
       <Navbar />

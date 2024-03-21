@@ -4,7 +4,83 @@ import "./Chat.css";
 function Chat({ socket, username, room }) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
+  const synth = window.speechSynthesis;
+  const [suggestions, setSuggestions] = useState(Array(3).fill(""));
+  //GPT translate
+  const API_KEY = "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";
 
+  async function processSingleMessageToChatGPT(text) {
+    const apiRequestBody = {
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: "translate to chinese." + text }],
+    };
+
+    try {
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(apiRequestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data); // Check the response data structure
+      const generatedMessage = data.choices[0].message.content;
+      return generatedMessage;
+    } catch (error) {
+      console.error("Error processing message:", error);
+      return null;
+    }
+  }
+
+  async function getSuggestion(text) {
+    const apiRequestBody = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "user", content: "get me 3 suggestion to reply this" + text },
+      ],
+    };
+
+    try {
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(apiRequestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data); // Check the response data structure
+      const generatedMessage = data.choices[0].message.content;
+      console.log(generatedMessage);
+      // Assuming the returned string is stored in a variable called suggestionsString
+      const suggestionsArray = generatedMessage.split("\n");
+      setSuggestions(suggestionsArray);
+    } catch (error) {
+      console.error("Error processing message:", error);
+      return null;
+    }
+  }
+
+  //send message
   const sendMessage = async () => {
     if (currentMessage !== "") {
       const messageData = {
@@ -29,12 +105,30 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
-  const sendSuggestionMessage = (event) => {
-    // Get the message from the data attribute of the clicked button
-    const message = event.target.dataset.message;
+  const removeTextAfterParenthesis = (text) => {
+    const index = text.indexOf("("); // Find the index of the opening parenthesis
+    if (index !== -1) {
+      return text.substring(0, index).trim(); // Extract the text before the opening parenthesis and trim any leading or trailing whitespace
+    } else {
+      return text; // If no opening parenthesis is found, return the original text
+    }
+  };
 
-    // Do whatever you need with the message
-    setCurrentMessage(message);
+  //Text to spech
+  const speakMessage = (text) => {
+    const newText = removeTextAfterParenthesis(text);
+    const utterance = new SpeechSynthesisUtterance(newText);
+    utterance.lang = "zh-CN";
+    synth.speak(utterance);
+  };
+
+  const translateText = async (text) => {
+    const generatedMessage = await processSingleMessageToChatGPT(text);
+    if (generatedMessage) {
+      // Do something with the generated message
+      console.log("Generated message:", generatedMessage);
+      return generatedMessage;
+    }
   };
 
   return (
@@ -44,9 +138,10 @@ function Chat({ socket, username, room }) {
       </div>
       <div className="chat-body">
         <ScrollToBottom className="message-container">
-          {messageList.map((messageContent) => {
+          {messageList.map((messageContent,index) => {
             return (
               <div
+              key={index}// Use index as the key if messageContent doesn't have a unique ID
                 className="message"
                 id={username === messageContent.author ? "you" : "other"}
               >
@@ -59,14 +154,44 @@ function Chat({ socket, username, room }) {
                     <p id="author">{messageContent.author}</p>
                     <button
                       className="button-speak"
-                      onClick={sendSuggestionMessage}
-                      data-message={messageContent.message} // Store the message as a data attribute
+                      onClick={() => speakMessage(messageContent.message)}
                     >
-                      4
+                      Speak
                     </button>
 
-                    <button className="button-translate">Speak</button>
-                    <button className="button-suggest">Speak</button>
+                    <button
+                      className="button-translate"
+                      onClick={() => {
+                        translateText(messageContent.message)
+                          .then((translatedMessage) => {
+                            setMessageList((prevMessageList) => {
+                              const updatedMessageList = prevMessageList.map(
+                                (msg) => {
+                                  if (msg === messageContent) {
+                                    return {
+                                      ...msg,
+                                      message: translatedMessage,
+                                    };
+                                  }
+                                  return msg;
+                                }
+                              );
+                              return updatedMessageList;
+                            });
+                          })
+                          .catch((error) => {
+                            console.error("Translation error:", error);
+                          });
+                      }}
+                    >
+                      Translate
+                    </button>
+                    <button
+                      className="button-suggest"
+                      onClick={() => getSuggestion(messageContent.message)}
+                    >
+                      Suggest
+                    </button>
                   </div>
                 </div>
               </div>
@@ -88,9 +213,26 @@ function Chat({ socket, username, room }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
-      <button className="button-suggest-1">{currentMessage}</button>
-      <button className="button-suggest-2">Speak</button>
-      <button className="button-suggest-3">Speak</button>
+      <button
+        className="button-suggest-1"
+        onClick={() => {
+          if (suggestions[0]) {
+            const message = suggestions[0];
+            const messageData = {
+              room: room,
+              author: username,
+              message: message,
+              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+            };
+            socket.emit("send_message", messageData);
+            setMessageList((list) => [...list, messageData]);
+          }
+        }}
+      >
+        {suggestions[0]}
+      </button>
+      <button className="button-suggest-2">{suggestions[1]}</button>
+      <button className="button-suggest-3">{suggestions[2]}</button>
     </div>
   );
 }

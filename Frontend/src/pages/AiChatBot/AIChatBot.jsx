@@ -14,7 +14,7 @@ import Navbar from "../Global/Navbar";
 import Footer from "../Global/Footer";
 import { useParams } from "react-router-dom";
 
-const API_KEY = "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";
+const API_KEY = "";
 
 
 

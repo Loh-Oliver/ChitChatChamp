@@ -5,6 +5,7 @@ import Login from "./Components/Login";
 import Chat from "./Components/Chat";
 import LanguageSelection from "./Components/AiChatBot/LanguageSelection"
 import AiChatBot from "./Components/AiChatBot/AIChatBot"
+import SelectPage from "./Components/SelectChatPage"
 import io from "socket.io-client";
 
 const socket = io.connect("http://localhost:3001");
@@ -19,6 +20,7 @@ class App extends Component {
           <Route path="/chat/:room" element={<Chat socket={socket} />} />
           <Route path="/AIChatBot/:language" element={<AiChatBot />} />
           <Route path="/LanguageSelection" element={<LanguageSelection />} />
+          <Route path="/selectChat" element={<SelectPage/>}/>
         </Routes>
       </Router>
     );

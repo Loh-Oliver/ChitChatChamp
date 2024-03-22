@@ -17,7 +17,7 @@ function HomePage() {
               Practice speaking, listening, reading, and writing in multiple
               languages with our AI-powered chatbot.
             </p>
-            <Link to="/Login" className="get-started-button">
+            <Link to="/selectChat" className="get-started-button">
               Get Started
             </Link>
           </div>

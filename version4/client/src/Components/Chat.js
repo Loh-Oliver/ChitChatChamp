@@ -136,6 +136,7 @@ function Chat({ socket, username, room }) {
       };
 
       await socket.emit("send_message", messageData);
+      console.log("Sending message:", messageData); // Add this line to log the received message
       setMessageList((list) => [...list, messageData]);
       setCurrentMessage("");
     }
@@ -143,6 +144,7 @@ function Chat({ socket, username, room }) {
 
   useEffect(() => {
     socket.on("receive_message", (data) => {
+      console.log("Received message:", data); // Add this line to log the received message
       setMessageList((list) => [...list, data]);
     });
   }, [socket]);

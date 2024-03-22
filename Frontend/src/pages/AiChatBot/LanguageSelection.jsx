@@ -15,6 +15,7 @@ function LanguageSelectionPage() {
       <h1>Select Your Preferred Language</h1>
       <div>
         <button onClick={() => handleLanguageSelect('English')}>English</button>
+        <button onClick={() => handleLanguageSelect('Chinese')}>Chinese</button>
         <button onClick={() => handleLanguageSelect('Spanish')}>Spanish</button>
         <button onClick={() => handleLanguageSelect('French')}>French</button>
       </div>

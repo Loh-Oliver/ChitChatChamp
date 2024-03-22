@@ -14,7 +14,7 @@ import Navbar from "../Global/Navbar";
 import Footer from "../Global/Footer";
 import { useParams } from "react-router-dom";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 
 
@@ -31,12 +31,13 @@ function AIChatBot() {
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const { speak, cancel } = useSpeechSynthesis(); // Destructure the speak and cancel functions
   const [speaking, setSpeaking] = useState(false); // Initialize speaking state
+
   const speakMessage = (text) => {
     if (speaking) {
       cancel(); // Stop speaking if already speaking
       setSpeaking(false); // Reset speaking state
     } else {
-      speak({ text }); // Speak the message
+      speak({ text, lang: 'zh-CN' }); // Speak the message
       setSpeaking(true); // Update speaking state
     }
   };

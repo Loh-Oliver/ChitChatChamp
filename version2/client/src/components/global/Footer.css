@@ -1,9 +1,0 @@
-/* Footer Styles */
-.footer {
-    background-color: #f4f4f4;
-    padding: 20px;
-    text-align: center;
-    font-size: 0.9rem;
-    width: 100%; /* Take up the full width of the viewport */
-    margin-top: auto; /* Push the footer to the bottom of the container */
-  }

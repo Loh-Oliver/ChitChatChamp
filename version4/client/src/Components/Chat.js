@@ -46,7 +46,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
@@ -173,6 +173,21 @@ function Chat({ socket, username, room }) {
     }
   };
 
+  const handleSendSuggestion = (index) => {
+    if (suggestions[index]) {
+      const message = suggestions[index].replace(/^\d+\.\s/, "");
+      const messageData = {
+        room: room,
+        author: username,
+        message: message,
+        time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+      };
+      socket.emit("send_message", messageData);
+      setMessageList((list) => [...list, messageData]);
+      setSuggestions(Array(3).fill("")); // Clear suggestions after sending
+    }
+  };
+
   return (
     <div>
       <NavBar></NavBar>
@@ -183,7 +198,7 @@ function Chat({ socket, username, room }) {
           </Typography>
         </Grid>
       </Grid>
-      <Grid container  className={classes.chatSection}>
+      <Grid container className={classes.chatSection}>
         <Grid item xs={3} className={classes.borderRight500}>
           <List>
             <ListItem Button key="RemySharp">
@@ -316,7 +331,7 @@ function Chat({ socket, username, room }) {
                               : "Translate"}
                           </Button>
                           <Button variant="contained"
-                             
+
                             className="Button-suggest"
                             onClick={() =>
                               getSuggestion(messageContent.message)
@@ -351,19 +366,7 @@ function Chat({ socket, username, room }) {
             {/*Suggestion Buttons */}
             <Button
               className="Button-suggest-1"
-              onClick={() => {
-                if (suggestions[0]) {
-                  const message = suggestions[0].replace(/^\d+\.\s/, "");
-                  const messageData = {
-                    room: room,
-                    author: username,
-                    message: message,
-                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                  };
-                  socket.emit("send_message", messageData);
-                  setMessageList((list) => [...list, messageData]);
-                }
-              }}
+              onClick={() => handleSendSuggestion(0)}
               style={{ display: suggestions[0] ? "block" : "none" }}
             >
               {suggestions[0]}
@@ -371,38 +374,15 @@ function Chat({ socket, username, room }) {
 
             <Button
               className="Button-suggest-2"
-              onClick={() => {
-                if (suggestions[1]) {
-                  const message = suggestions[1].replace(/^\d+\.\s/, "");
-                  const messageData = {
-                    room: room,
-                    author: username,
-                    message: message,
-                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                  };
-                  socket.emit("send_message", messageData);
-                  setMessageList((list) => [...list, messageData]);
-                }
-              }}
+              onClick={() => handleSendSuggestion(1)}
               style={{ display: suggestions[1] ? "block" : "none" }}
             >
               {suggestions[1]}
             </Button>
+
             <Button
               className="Button-suggest-3"
-              onClick={() => {
-                if (suggestions[2]) {
-                  const message = suggestions[2].replace(/^\d+\.\s/, "");
-                  const messageData = {
-                    room: room,
-                    author: username,
-                    message: message,
-                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-                  };
-                  socket.emit("send_message", messageData);
-                  setMessageList((list) => [...list, messageData]);
-                }
-              }}
+              onClick={() => handleSendSuggestion(2)}
               style={{ display: suggestions[2] ? "block" : "none" }}
             >
               {suggestions[2]}

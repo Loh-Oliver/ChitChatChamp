@@ -46,7 +46,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {

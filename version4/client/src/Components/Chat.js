@@ -1,13 +1,52 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
+
 import "./Chat.css";
+
+import { makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Divider from "@material-ui/core/Divider";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Avatar from "@material-ui/core/Avatar";
+import Fab from "@material-ui/core/Fab";
+import SendIcon from "@material-ui/icons/Send";
+import NavBar from "./NavBar";
+import Button from "@mui/material/Button"
+const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+  chatSection: {
+    width: "100%",
+    height: "80vh",
+  },
+  headBG: {
+    backgroundColor: "#e0e0e0",
+  },
+  borderRight500: {
+    borderRight: "1px solid #e0e0e0",
+  },
+  messageArea: {
+    height: "70vh",
+    overflowY: "auto",
+  },
+});
+
 function Chat({ socket, username, room }) {
+  const classes = useStyles();
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
@@ -135,170 +174,242 @@ function Chat({ socket, username, room }) {
   };
 
   return (
-    <div className="chat-window">
-      <div className="chat-header">
-        <p>Live Chat</p>
-      </div>
-      <div className="chat-body">
-        <ScrollToBottom className="message-container">
-          {messageList.map((messageContent, index) => {
-            return (
-              <div
-                key={index} // Use index as the key if messageContent doesn't have a unique ID
-                className="message"
-                id={username === messageContent.author ? "you" : "other"}
-              >
-                <div>
-                  <div className="message-content">
-                    <p>{messageContent.message}</p>
-                  </div>
-                  <div className="message-meta">
-                    <p id="time">{messageContent.time}</p>
-
-                    <p id="author">{messageContent.author}</p>
-                  </div>
-                  <div className="button-list">
-                    <button
-                      className="button-speak"
-                      onClick={() => speakMessage(messageContent.message)}
+    <div>
+      <NavBar></NavBar>
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography variant="h5" className="header-message">
+            Chat
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid container  className={classes.chatSection}>
+        <Grid item xs={3} className={classes.borderRight500}>
+          <List>
+            <ListItem Button key="RemySharp">
+              <ListItemIcon>
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://material-ui.com/static/images/avatar/1.jpg"
+                />
+              </ListItemIcon>
+              <ListItemText primary="John Wick"></ListItemText>
+            </ListItem>
+          </List>
+          <Divider />
+          <Grid item xs={12} style={{ padding: "10px" }}>
+            <TextField
+              id="outlined-basic-email"
+              label="Search"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Divider />
+          <List>
+            <ListItem Button key="RemySharp">
+              <ListItemIcon>
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://material-ui.com/static/images/avatar/1.jpg"
+                />
+              </ListItemIcon>
+              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
+              <ListItemText secondary="online" align="right"></ListItemText>
+            </ListItem>
+            <ListItem Button key="Alice">
+              <ListItemIcon>
+                <Avatar
+                  alt="Alice"
+                  src="https://material-ui.com/static/images/avatar/3.jpg"
+                />
+              </ListItemIcon>
+              <ListItemText primary="Alice">Alice</ListItemText>
+            </ListItem>
+            <ListItem Button key="CindyBaker">
+              <ListItemIcon>
+                <Avatar
+                  alt="Cindy Baker"
+                  src="https://material-ui.com/static/images/avatar/2.jpg"
+                />
+              </ListItemIcon>
+              <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
+            </ListItem>
+          </List>
+        </Grid>
+        <Grid item xs={9}>
+          <div className="chat-window">
+            <div className="chat-header">
+              <p>Live Chat</p>
+            </div>
+            <div className="chat-body">
+              <ScrollToBottom className="message-container">
+                {messageList.map((messageContent, index) => {
+                  return (
+                    <div
+                      key={index} // Use index as the key if messageContent doesn't have a unique ID
+                      className="message"
+                      id={username === messageContent.author ? "you" : "other"}
                     >
-                      Speak
-                    </button>
+                      <div>
+                        <div className="message-content">
+                          <p>{messageContent.message}</p>
+                        </div>
+                        <div className="message-meta">
+                          <p id="time">{messageContent.time}</p>
 
-                    <button
-                      className="button-translate"
-                      onClick={() => {
-                        if (!messageContent.translated) {
-                          translateText(messageContent.message)
-                            .then((translatedMessage) => {
-                              setMessageList((prevMessageList) => {
-                                const updatedMessageList = prevMessageList.map(
-                                  (msg) => {
-                                    if (msg === messageContent) {
-                                      return {
-                                        ...msg,
-                                        originalMessage: msg.message,
-                                        message: translatedMessage,
-                                        translated: true, // Set translated state for this message
-                                      };
-                                    }
-                                    return msg;
-                                  }
-                                );
-                                return updatedMessageList;
-                              });
-                            })
-                            .catch((error) => {
-                              console.error("Translation error:", error);
-                            });
-                        } else {
-                          setMessageList((prevMessageList) => {
-                            const updatedMessageList = prevMessageList.map(
-                              (msg) => {
-                                if (msg === messageContent) {
-                                  return {
-                                    ...msg,
-                                    message: msg.originalMessage,
-                                    translated: false, // Reset translated state for this message
-                                  };
-                                }
-                                return msg;
+                          <p id="author">{messageContent.author}</p>
+                        </div>
+                        <div className="Button-list">
+                          <Button variant="contained"
+                            className="Button-speak"
+                            onClick={() => speakMessage(messageContent.message)}
+                          >
+                            Speak
+                          </Button>
+
+                          <Button variant="contained"
+                            className="Button-translate"
+                            onClick={() => {
+                              if (!messageContent.translated) {
+                                translateText(messageContent.message)
+                                  .then((translatedMessage) => {
+                                    setMessageList((prevMessageList) => {
+                                      const updatedMessageList =
+                                        prevMessageList.map((msg) => {
+                                          if (msg === messageContent) {
+                                            return {
+                                              ...msg,
+                                              originalMessage: msg.message,
+                                              message: translatedMessage,
+                                              translated: true, // Set translated state for this message
+                                            };
+                                          }
+                                          return msg;
+                                        });
+                                      return updatedMessageList;
+                                    });
+                                  })
+                                  .catch((error) => {
+                                    console.error("Translation error:", error);
+                                  });
+                              } else {
+                                setMessageList((prevMessageList) => {
+                                  const updatedMessageList =
+                                    prevMessageList.map((msg) => {
+                                      if (msg === messageContent) {
+                                        return {
+                                          ...msg,
+                                          message: msg.originalMessage,
+                                          translated: false, // Reset translated state for this message
+                                        };
+                                      }
+                                      return msg;
+                                    });
+                                  return updatedMessageList;
+                                });
                               }
-                            );
-                            return updatedMessageList;
-                          });
-                        }
-                      }}
-                    >
-                      {messageContent.translated
-                        ? "Translate Back"
-                        : "Translate"}
-                    </button>
-                    <button
-                      className="button-suggest"
-                      onClick={() => getSuggestion(messageContent.message)}
-                    >
-                      Suggest
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </ScrollToBottom>
-      </div>
+                            }}
+                          >
+                            {messageContent.translated
+                              ? "Translate Back"
+                              : "Translate"}
+                          </Button>
+                          <Button variant="contained"
+                             
+                            className="Button-suggest"
+                            onClick={() =>
+                              getSuggestion(messageContent.message)
+                            }
+                          >
+                            Suggest
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </ScrollToBottom>
+            </div>
 
-      {/* Footer */}
-      <div className="chat-footer">
-        <input
-          type="text"
-          value={currentMessage}
-          placeholder="Hey..."
-          onChange={(event) => {
-            setCurrentMessage(event.target.value);
-          }}
-          onKeyPress={(event) => {
-            event.key === "Enter" && sendMessage();
-          }}
-        />
-        <button onClick={sendMessage}>&#9658;</button>
-      </div>
+            {/* Footer */}
+            <div className="chat-footer">
+              <input
+                type="text"
+                value={currentMessage}
+                placeholder="Hey..."
+                onChange={(event) => {
+                  setCurrentMessage(event.target.value);
+                }}
+                onKeyPress={(event) => {
+                  event.key === "Enter" && sendMessage();
+                }}
+              />
+              <Button onClick={sendMessage}>&#9658;</Button>
+            </div>
 
-      {/*Suggestion Buttons */}
-      <button
-        className="button-suggest-1"
-        onClick={() => {
-          if (suggestions[0]) {
-            const message = suggestions[0].replace(/^\d+\.\s/, "");
-            const messageData = {
-              room: room,
-              author: username,
-              message: message,
-              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-            };
-            socket.emit("send_message", messageData);
-            setMessageList((list) => [...list, messageData]);
-          }
-        }}
-      >
-        {suggestions[0]}
-      </button>
-      <button
-        className="button-suggest-2"
-        onClick={() => {
-          if (suggestions[0]) {
-            const message = suggestions[1].replace(/^\d+\.\s/, "");
-            const messageData = {
-              room: room,
-              author: username,
-              message: message,
-              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-            };
-            socket.emit("send_message", messageData);
-            setMessageList((list) => [...list, messageData]);
-          }
-        }}
-      >
-        {suggestions[1]}
-      </button>
-      <button
-        className="button-suggest-3"
-        onClick={() => {
-          if (suggestions[0]) {
-            const message = suggestions[2].replace(/^\d+\.\s/, "");
-            const messageData = {
-              room: room,
-              author: username,
-              message: message,
-              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
-            };
-            socket.emit("send_message", messageData);
-            setMessageList((list) => [...list, messageData]);
-          }
-        }}
-      >
-        {suggestions[2]}
-      </button>
+            {/*Suggestion Buttons */}
+            <Button
+              className="Button-suggest-1"
+              onClick={() => {
+                if (suggestions[0]) {
+                  const message = suggestions[0].replace(/^\d+\.\s/, "");
+                  const messageData = {
+                    room: room,
+                    author: username,
+                    message: message,
+                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                  };
+                  socket.emit("send_message", messageData);
+                  setMessageList((list) => [...list, messageData]);
+                }
+              }}
+              style={{ display: suggestions[0] ? "block" : "none" }}
+            >
+              {suggestions[0]}
+            </Button>
+
+            <Button
+              className="Button-suggest-2"
+              onClick={() => {
+                if (suggestions[1]) {
+                  const message = suggestions[1].replace(/^\d+\.\s/, "");
+                  const messageData = {
+                    room: room,
+                    author: username,
+                    message: message,
+                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                  };
+                  socket.emit("send_message", messageData);
+                  setMessageList((list) => [...list, messageData]);
+                }
+              }}
+              style={{ display: suggestions[1] ? "block" : "none" }}
+            >
+              {suggestions[1]}
+            </Button>
+            <Button
+              className="Button-suggest-3"
+              onClick={() => {
+                if (suggestions[2]) {
+                  const message = suggestions[2].replace(/^\d+\.\s/, "");
+                  const messageData = {
+                    room: room,
+                    author: username,
+                    message: message,
+                    time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+                  };
+                  socket.emit("send_message", messageData);
+                  setMessageList((list) => [...list, messageData]);
+                }
+              }}
+              style={{ display: suggestions[2] ? "block" : "none" }}
+            >
+              {suggestions[2]}
+            </Button>
+          </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }

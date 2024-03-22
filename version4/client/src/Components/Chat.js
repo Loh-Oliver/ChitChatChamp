@@ -7,7 +7,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
@@ -46,7 +46,10 @@ function Chat({ socket, username, room }) {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
-        { role: "user", content: "get me 3 suggestion to reply this" + text },
+        {
+          role: "user",
+          content: "get me 3 easy suggestion to reply this" + text,
+        },
       ],
     };
 
@@ -138,10 +141,10 @@ function Chat({ socket, username, room }) {
       </div>
       <div className="chat-body">
         <ScrollToBottom className="message-container">
-          {messageList.map((messageContent,index) => {
+          {messageList.map((messageContent, index) => {
             return (
               <div
-              key={index}// Use index as the key if messageContent doesn't have a unique ID
+                key={index} // Use index as the key if messageContent doesn't have a unique ID
                 className="message"
                 id={username === messageContent.author ? "you" : "other"}
               >
@@ -151,7 +154,10 @@ function Chat({ socket, username, room }) {
                   </div>
                   <div className="message-meta">
                     <p id="time">{messageContent.time}</p>
+
                     <p id="author">{messageContent.author}</p>
+                  </div>
+                  <div className="button-list">
                     <button
                       className="button-speak"
                       onClick={() => speakMessage(messageContent.message)}
@@ -162,29 +168,51 @@ function Chat({ socket, username, room }) {
                     <button
                       className="button-translate"
                       onClick={() => {
-                        translateText(messageContent.message)
-                          .then((translatedMessage) => {
-                            setMessageList((prevMessageList) => {
-                              const updatedMessageList = prevMessageList.map(
-                                (msg) => {
-                                  if (msg === messageContent) {
-                                    return {
-                                      ...msg,
-                                      message: translatedMessage,
-                                    };
+                        if (!messageContent.translated) {
+                          translateText(messageContent.message)
+                            .then((translatedMessage) => {
+                              setMessageList((prevMessageList) => {
+                                const updatedMessageList = prevMessageList.map(
+                                  (msg) => {
+                                    if (msg === messageContent) {
+                                      return {
+                                        ...msg,
+                                        originalMessage: msg.message,
+                                        message: translatedMessage,
+                                        translated: true, // Set translated state for this message
+                                      };
+                                    }
+                                    return msg;
                                   }
-                                  return msg;
-                                }
-                              );
-                              return updatedMessageList;
+                                );
+                                return updatedMessageList;
+                              });
+                            })
+                            .catch((error) => {
+                              console.error("Translation error:", error);
                             });
-                          })
-                          .catch((error) => {
-                            console.error("Translation error:", error);
+                        } else {
+                          setMessageList((prevMessageList) => {
+                            const updatedMessageList = prevMessageList.map(
+                              (msg) => {
+                                if (msg === messageContent) {
+                                  return {
+                                    ...msg,
+                                    message: msg.originalMessage,
+                                    translated: false, // Reset translated state for this message
+                                  };
+                                }
+                                return msg;
+                              }
+                            );
+                            return updatedMessageList;
                           });
+                        }
                       }}
                     >
-                      Translate
+                      {messageContent.translated
+                        ? "Translate Back"
+                        : "Translate"}
                     </button>
                     <button
                       className="button-suggest"
@@ -199,6 +227,8 @@ function Chat({ socket, username, room }) {
           })}
         </ScrollToBottom>
       </div>
+
+      {/* Footer */}
       <div className="chat-footer">
         <input
           type="text"
@@ -213,11 +243,13 @@ function Chat({ socket, username, room }) {
         />
         <button onClick={sendMessage}>&#9658;</button>
       </div>
+
+      {/*Suggestion Buttons */}
       <button
         className="button-suggest-1"
         onClick={() => {
           if (suggestions[0]) {
-            const message = suggestions[0];
+            const message = suggestions[0].replace(/^\d+\.\s/, "");
             const messageData = {
               room: room,
               author: username,
@@ -231,8 +263,42 @@ function Chat({ socket, username, room }) {
       >
         {suggestions[0]}
       </button>
-      <button className="button-suggest-2">{suggestions[1]}</button>
-      <button className="button-suggest-3">{suggestions[2]}</button>
+      <button
+        className="button-suggest-2"
+        onClick={() => {
+          if (suggestions[0]) {
+            const message = suggestions[1].replace(/^\d+\.\s/, "");
+            const messageData = {
+              room: room,
+              author: username,
+              message: message,
+              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+            };
+            socket.emit("send_message", messageData);
+            setMessageList((list) => [...list, messageData]);
+          }
+        }}
+      >
+        {suggestions[1]}
+      </button>
+      <button
+        className="button-suggest-3"
+        onClick={() => {
+          if (suggestions[0]) {
+            const message = suggestions[2].replace(/^\d+\.\s/, "");
+            const messageData = {
+              room: room,
+              author: username,
+              message: message,
+              time: `${new Date().getHours()}:${new Date().getMinutes()}`,
+            };
+            socket.emit("send_message", messageData);
+            setMessageList((list) => [...list, messageData]);
+          }
+        }}
+      >
+        {suggestions[2]}
+      </button>
     </div>
   );
 }

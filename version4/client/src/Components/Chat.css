@@ -1,0 +1,24 @@
+.button-suggest-1,
+.button-suggest-2,
+.button-suggest-3 {
+  display: block;
+  margin-bottom: 5px; /* Adjust as needed to add space between buttons */
+  width: 100%
+}
+
+.message-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Align items vertically */
+}
+
+.button-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center; /* Align items vertically */
+  margin-top: 5px; /* Adjust as needed */
+}
+
+.button-list button {
+  margin-right: 10px; /* Adjust spacing between buttons */
+}

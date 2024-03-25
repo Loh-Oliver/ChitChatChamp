@@ -12,6 +12,7 @@ import {
 import { useSpeechSynthesis } from "react-speech-kit"; // Import text-to-speech library
 import NavBar from "../NavBar"
 import { useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const API_KEY = "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";
 
@@ -150,7 +151,7 @@ function AIChatBot() {
       <div className="chat-header">
         <div className="chat-title">Currently practicing ({language})</div>
       </div>
-      <div style={{ position: "relative", height: "800px", width: "700px" }}>
+      <div style={{ position: "relative", height: "800px", width: "100mw" }}>
         <MainContainer>
           <ChatContainer>
             <MessageList
@@ -161,14 +162,15 @@ function AIChatBot() {
             >
               {messages.map((message, i) => (
                 <div key={i}>
-                  <Message model={message} />
+                  <Message model={message} style={{ fontSize: '24px' }} />
+
                   <div>
-                    <button onClick={() => speak({ text: message.message })}>
+                    <Button variant="contained" onClick={() => speak({ text: message.message })}>
                       {speaking ? "Stop Speaking" : "Speak"}
-                    </button>
-                    <button onClick={handleSuggestionButtonClick}>
+                    </Button>
+                    <Button variant="contained" onClick={handleSuggestionButtonClick}>
                       Get Suggestions
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -187,7 +189,9 @@ function AIChatBot() {
           </ChatContainer>
         </MainContainer>
       </div>
+      
     </div>
+    
   );
 }
 

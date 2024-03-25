@@ -1,26 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-
 import "./Chat.css";
 import { BsTranslate } from "react-icons/bs";
 import { RiSpeakLine } from "react-icons/ri";
 import { FaClipboardQuestion } from "react-icons/fa6";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import Fab from "@material-ui/core/Fab";
-import SendIcon from "@material-ui/icons/Send";
-import NavBar from "./NavBar";
 import Button from "@mui/material/Button";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -152,6 +146,10 @@ function Chat({ socket, username, room }) {
   }, [socket]);
 
   const removeTextAfterParenthesis = (text) => {
+    if (typeof text !== "string") {
+      return ""; // Return an empty string if text is not a string
+    }
+
     const index = text.indexOf("("); // Find the index of the opening parenthesis
     if (index !== -1) {
       return text.substring(0, index).trim(); // Extract the text before the opening parenthesis and trim any leading or trailing whitespace
@@ -229,7 +227,7 @@ function Chat({ socket, username, room }) {
               <ListItemText primary="Justin DW">Remy Sharp</ListItemText>
               <ListItemText secondary="online" align="right"></ListItemText>
             </ListItem>
-         {/*    <ListItem Button key="Alice">
+            {/*    <ListItem Button key="Alice">
               <ListItemIcon>
                 <Avatar
                   alt="Alice"

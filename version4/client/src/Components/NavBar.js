@@ -112,7 +112,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            Chit Chat Champ
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (

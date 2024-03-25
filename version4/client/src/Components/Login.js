@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import { useState } from "react";
 import Chat from "./Chat";
 import NavBar from "./NavBar";
-
+import Button from "@mui/material/Button";
 const socket = io.connect("http://localhost:3001");
 
 function Login() {
@@ -45,7 +45,7 @@ function Login() {
               <p>I like chess and chinese</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <button onClick={joinRoom}>Talk to him</button>
+                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
               </div>
             </div>
             <div className="grid-item-1">
@@ -58,7 +58,7 @@ function Login() {
               <p>I like Beer and want to learn german</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <button onClick={joinRoom}>Talk to him</button>
+                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
               </div>
             </div>
             <div className="grid-item-1">
@@ -70,7 +70,7 @@ function Login() {
               <p>I like birds and want to learn korean</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <button onClick={joinRoom}>Talk to him</button>
+                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
               </div>
             </div>
 

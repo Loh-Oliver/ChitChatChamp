@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import { useState } from "react";
 import Chat from "./Chat";
 import NavBar from "./NavBar";
+
 const socket = io.connect("http://localhost:3001");
 
 function Login() {
@@ -11,42 +12,70 @@ function Login() {
   const [showChat, setShowChat] = useState(false);
 
   const joinRoom = () => {
-    if (username !== "" && room !== "") {
-      socket.emit("join_room", room);
-      setShowChat(true);
-    }
+    // Prefill the username and room
+    const prefillUsername = "John"; // Set your default username here
+    const prefillRoom = "Room123"; // Set your default room here
+
+    // Set the username and room state
+    setUsername(prefillUsername);
+    setRoom(prefillRoom);
+
+    // Emit the join_room event
+    socket.emit("join_room", prefillRoom);
+    setShowChat(true);
   };
 
   return (
     <div>
       <NavBar></NavBar>
-      <div
-        className="Login
-  "
-      >
-        {!showChat ? (
-          <div className="joinChatContainer">
-            <h3>Join A Chat</h3>
-            <input
-              type="text"
-              placeholder="John..."
-              onChange={(event) => {
-                setUsername(event.target.value);
-              }}
+      <h1>
+        Start a conversation!
+      </h1>
+      {/* Conditional rendering based on showChat state */}
+      {showChat ? (
+        <Chat socket={socket} username={username} room={room} />
+      ) : (
+        <div className="grid-container">
+          <div className="grid-item-1">
+            <img
+              src="https://material-ui.com/static/images/avatar/1.jpg"
+              alt="Avatar"
             />
-            <input
-              type="text"
-              placeholder="Room ID..."
-              onChange={(event) => {
-                setRoom(event.target.value);
-              }}
-            />
-            <button onClick={joinRoom}>Join A Room</button>
+            <h3>Justin DW</h3>
+            <p>I like chess and chinese</p>
+            <div className="joinChatContainer">
+              {/* Remove the input fields for username and room */}
+              <button onClick={joinRoom}>Talk to him</button>
+            </div>
           </div>
-        ) : (
-          <Chat socket={socket} username={username} room={room} />
-        )}
-      </div>
+          <div className="grid-item-1">
+            <img
+              src="https://material-ui.com/static/images/avatar/1.jpg"
+              alt="Avatar"
+            />
+            <h3>Justin DW</h3>
+            <p>I like chess and chinese</p>
+            <div className="joinChatContainer">
+              {/* Remove the input fields for username and room */}
+              <button onClick={joinRoom}>Talk to him</button>
+            </div>
+          </div>
+          <div className="grid-item-1">
+            <img
+              src="https://material-ui.com/static/images/avatar/1.jpg"
+              alt="Avatar"
+            />
+            <h3>Justin DW</h3>
+            <p>I like chess and chinese</p>
+            <div className="joinChatContainer">
+              {/* Remove the input fields for username and room */}
+              <button onClick={joinRoom}>Talk to him</button>
+            </div>
+          </div>
+          
+          {/* Add more grid items as needed */}
+        </div>
+      )}
     </div>
   );
 }

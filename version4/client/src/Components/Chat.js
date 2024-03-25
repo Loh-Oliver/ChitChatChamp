@@ -14,6 +14,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@mui/material/Button";
+import OpenAI from "openai";
 
 const useStyles = makeStyles({
   table: {
@@ -43,6 +44,22 @@ function Chat({ socket, username, room }) {
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
   const API_KEY = "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";
+
+  const openai = new OpenAI({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
+
+  async function moderation(message) {
+    const moderationResult = await openai.moderations.create({
+        input: message,
+    });
+
+    console.log(moderationResult);
+
+    // Extract the "flagged" value from the moderationResult object
+    const flagged = moderationResult.results[0].flagged;
+    console.log(flagged); // Output: true
+
+    return flagged; // Return the flagged value
+}
 
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
@@ -121,20 +138,40 @@ function Chat({ socket, username, room }) {
   //send message
   const sendMessage = async () => {
     if (currentMessage !== "") {
-      const messageData = {
-        room: room,
-        author: username,
-        message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
-      };
-
-      await socket.emit("send_message", messageData);
-      console.log("Sending message:", messageData); // Add this line to log the received message
-      setMessageList((list) => [...list, messageData]);
-      setCurrentMessage("");
+      const moderatedMessage = await moderation(currentMessage); // Check if the message is flagged by moderation
+  
+      if (!moderatedMessage) {
+        const messageData = {
+          room: room,
+          author: username,
+          message: currentMessage,
+          time:
+            new Date(Date.now()).getHours() +
+            ":" +
+            new Date(Date.now()).getMinutes(),
+        };
+  
+        await socket.emit("send_message", messageData);
+        console.log("Sending message:", messageData); // Add this line to log the received message
+        setMessageList((list) => [...list, messageData]);
+        setCurrentMessage("");
+      } else {
+        console.log("Message flagged by moderation:", currentMessage);
+        // Handle the case where the message is flagged by moderation
+        // For example, display a warning message to the user
+        const messageData = {
+          room: room,
+          author: "System",
+          message: "Please do not use negative language",
+          time:
+            new Date(Date.now()).getHours() +
+            ":" +
+            new Date(Date.now()).getMinutes(),
+        };
+        await socket.emit("send_message", messageData);
+        setMessageList((list) => [...list, messageData]);
+        setCurrentMessage("");
+      }
     }
   };
 

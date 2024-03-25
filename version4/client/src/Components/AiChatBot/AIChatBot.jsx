@@ -30,7 +30,8 @@ function AIChatBot() {
   const [speaking, setSpeaking] = useState(false); // Initialize speaking state
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const speakMessage = text => {
+  const speakMessage = message => {
+    const { text } = message;
     if (speaking) {
       cancel(); // Stop speaking if already speaking
       setSpeaking(false); // Reset speaking state
@@ -165,7 +166,7 @@ function AIChatBot() {
                   <Message model={message} style={{ fontSize: '24px' }} />
 
                   <div>
-                    <Button variant="contained" onClick={() => speak({ text: message.message })}>
+                    <Button variant="contained" onClick={() => speakMessage({ text: message.message })}>
                       {speaking ? "Stop Speaking" : "Speak"}
                     </Button>
                     <Button variant="contained" onClick={handleSuggestionButtonClick}>

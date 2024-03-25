@@ -13,7 +13,7 @@ import { useSpeechSynthesis } from "react-speech-kit"; // Import text-to-speech 
 
 import { useParams } from "react-router-dom";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter
@@ -80,7 +80,7 @@ function AIChatBot() {
         model: "gpt-3.5-turbo",
         messages: [systemMessage, ...apiMessages, {
           role: "system",
-          content: "Give me 3 reply suggestions without acknowledging the user"
+          content: "Give me 3 reply suggestions that the user can use to reply the system's prompt without acknowledging the user"
         }]
       };
     } else {

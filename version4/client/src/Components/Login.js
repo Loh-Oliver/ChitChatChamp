@@ -28,52 +28,54 @@ function Login() {
   return (
     <div>
       <NavBar></NavBar>
-      <h1>
-        Start a conversation!
-      </h1>
+
       {/* Conditional rendering based on showChat state */}
       {showChat ? (
         <Chat socket={socket} username={username} room={room} />
       ) : (
-        <div className="grid-container">
-          <div className="grid-item-1">
-            <img
-              src="https://material-ui.com/static/images/avatar/1.jpg"
-              alt="Avatar"
-            />
-            <h3>Justin DW</h3>
-            <p>I like chess and chinese</p>
-            <div className="joinChatContainer">
-              {/* Remove the input fields for username and room */}
-              <button onClick={joinRoom}>Talk to him</button>
+        <div>
+          <h1>Start a conversation!</h1>
+          <div className="grid-container">
+            <div className="grid-item-1">
+              <img
+                src="https://material-ui.com/static/images/avatar/1.jpg"
+                alt="Avatar"
+              />
+              <h3>Juicetin Dominic Welsh</h3>
+              <p>I like chess and chinese</p>
+              <div className="joinChatContainer">
+                {/* Remove the input fields for username and room */}
+                <button onClick={joinRoom}>Talk to him</button>
+              </div>
             </div>
-          </div>
-          <div className="grid-item-1">
-            <img
-              src="https://material-ui.com/static/images/avatar/1.jpg"
-              alt="Avatar"
-            />
-            <h3>Justin DW</h3>
-            <p>I like chess and chinese</p>
-            <div className="joinChatContainer">
-              {/* Remove the input fields for username and room */}
-              <button onClick={joinRoom}>Talk to him</button>
+            <div className="grid-item-1">
+              <img
+                src="https://material-ui.com/static/images/avatar/1.jpg"
+                alt="Avatar"
+              />
+              <h3>Nicola Cage 
+              </h3>
+              <p>I like Beer and want to learn german</p>
+              <div className="joinChatContainer">
+                {/* Remove the input fields for username and room */}
+                <button onClick={joinRoom}>Talk to him</button>
+              </div>
             </div>
-          </div>
-          <div className="grid-item-1">
-            <img
-              src="https://material-ui.com/static/images/avatar/1.jpg"
-              alt="Avatar"
-            />
-            <h3>Justin DW</h3>
-            <p>I like chess and chinese</p>
-            <div className="joinChatContainer">
-              {/* Remove the input fields for username and room */}
-              <button onClick={joinRoom}>Talk to him</button>
+            <div className="grid-item-1">
+              <img
+                src="https://material-ui.com/static/images/avatar/1.jpg"
+                alt="Avatar"
+              />
+              <h3>Shawney Kingston</h3>
+              <p>I like birds and want to learn korean</p>
+              <div className="joinChatContainer">
+                {/* Remove the input fields for username and room */}
+                <button onClick={joinRoom}>Talk to him</button>
+              </div>
             </div>
+
+            {/* Add more grid items as needed */}
           </div>
-          
-          {/* Add more grid items as needed */}
         </div>
       )}
     </div>

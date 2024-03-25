@@ -205,7 +205,7 @@ function Chat({ socket, username, room }) {
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="John Wick"></ListItemText>
+              <ListItemText primary="Justin DW"></ListItemText>
             </ListItem>
           </List>
           <Divider />
@@ -222,14 +222,14 @@ function Chat({ socket, username, room }) {
             <ListItem Button key="RemySharp">
               <ListItemIcon>
                 <Avatar
-                  alt="Remy Sharp"
+                  alt="Justin DW"
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
+              <ListItemText primary="Justin DW">Remy Sharp</ListItemText>
               <ListItemText secondary="online" align="right"></ListItemText>
             </ListItem>
-            <ListItem Button key="Alice">
+         {/*    <ListItem Button key="Alice">
               <ListItemIcon>
                 <Avatar
                   alt="Alice"
@@ -246,7 +246,7 @@ function Chat({ socket, username, room }) {
                 />
               </ListItemIcon>
               <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
-            </ListItem>
+            </ListItem> */}
           </List>
         </Grid>
         <Grid item xs={9}>

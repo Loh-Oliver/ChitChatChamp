@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-
 import "./Chat.css";
-
+import { BsTranslate } from "react-icons/bs";
+import { RiSpeakLine } from "react-icons/ri";
+import { FaClipboardQuestion } from "react-icons/fa6";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
-import Fab from "@material-ui/core/Fab";
-import SendIcon from "@material-ui/icons/Send";
-import NavBar from "./NavBar";
-import Button from "@mui/material/Button"
+import Button from "@mui/material/Button";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650,
@@ -150,6 +146,10 @@ function Chat({ socket, username, room }) {
   }, [socket]);
 
   const removeTextAfterParenthesis = (text) => {
+    if (typeof text !== "string") {
+      return ""; // Return an empty string if text is not a string
+    }
+
     const index = text.indexOf("("); // Find the index of the opening parenthesis
     if (index !== -1) {
       return text.substring(0, index).trim(); // Extract the text before the opening parenthesis and trim any leading or trailing whitespace
@@ -192,14 +192,7 @@ function Chat({ socket, username, room }) {
 
   return (
     <div>
-      <NavBar></NavBar>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="h5" className="header-message">
-            Chat
-          </Typography>
-        </Grid>
-      </Grid>
+      <Grid container></Grid>
       <Grid container className={classes.chatSection}>
         <Grid item xs={3} className={classes.borderRight500}>
           <List>
@@ -210,7 +203,7 @@ function Chat({ socket, username, room }) {
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="John Wick"></ListItemText>
+              <ListItemText primary="Justin DW"></ListItemText>
             </ListItem>
           </List>
           <Divider />
@@ -227,14 +220,14 @@ function Chat({ socket, username, room }) {
             <ListItem Button key="RemySharp">
               <ListItemIcon>
                 <Avatar
-                  alt="Remy Sharp"
+                  alt="Justin DW"
                   src="https://material-ui.com/static/images/avatar/1.jpg"
                 />
               </ListItemIcon>
-              <ListItemText primary="Remy Sharp">Remy Sharp</ListItemText>
+              <ListItemText primary="Justin DW">Remy Sharp</ListItemText>
               <ListItemText secondary="online" align="right"></ListItemText>
             </ListItem>
-            <ListItem Button key="Alice">
+            {/*    <ListItem Button key="Alice">
               <ListItemIcon>
                 <Avatar
                   alt="Alice"
@@ -251,14 +244,11 @@ function Chat({ socket, username, room }) {
                 />
               </ListItemIcon>
               <ListItemText primary="Cindy Baker">Cindy Baker</ListItemText>
-            </ListItem>
+            </ListItem> */}
           </List>
         </Grid>
         <Grid item xs={9}>
           <div className="chat-window">
-            <div className="chat-header">
-              <p>Live Chat</p>
-            </div>
             <div className="chat-body">
               <ScrollToBottom className="message-container">
                 {messageList.map((messageContent, index) => {
@@ -269,24 +259,44 @@ function Chat({ socket, username, room }) {
                       id={username === messageContent.author ? "you" : "other"}
                     >
                       <div>
-                        <div className="message-content">
-                          <p>{messageContent.message}</p>
+                        <div className="message-bubble">
+                          <div className="message-content">
+                            <p>{messageContent.message}</p>
+                          </div>
                         </div>
+
                         <div className="message-meta">
                           <p id="time">{messageContent.time}</p>
 
                           <p id="author">{messageContent.author}</p>
                         </div>
                         <div className="Button-list">
-                          <Button variant="contained"
+                          <Button
+                            variant="contained"
                             className="Button-speak"
                             onClick={() => speakMessage(messageContent.message)}
+                            style={{
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: "5px",
+                              minWidth: "unset",
+                              height: "30px",
+                              width: "35px",
+                            }}
                           >
-                            Speak
+                            <RiSpeakLine style={{ marginRight: "5px" }} />{" "}
                           </Button>
 
-                          <Button variant="contained"
+                          <Button
+                            variant="contained"
                             className="Button-translate"
+                            startIcon={<BsTranslate />} // Use the BsTranslate icon as the start icon
+                            style={{
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: "5px",
+                              minWidth: "unset",
+                            }}
                             onClick={() => {
                               if (!messageContent.translated) {
                                 translateText(messageContent.message)
@@ -327,20 +337,21 @@ function Chat({ socket, username, room }) {
                                 });
                               }
                             }}
-                          >
-                            {messageContent.translated
-                              ? "Translate Back"
-                              : "Translate"}
-                          </Button>
-                          <Button variant="contained"
-
+                          ></Button>
+                          <Button
+                            startIcon={<FaClipboardQuestion />} // Use the BsTranslate icon as the start icon
+                            style={{
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: "5px",
+                              minWidth: "unset",
+                            }}
+                            variant="contained"
                             className="Button-suggest"
                             onClick={() =>
                               getSuggestion(messageContent.message)
                             }
-                          >
-                            Suggest
-                          </Button>
+                          ></Button>
                         </div>
                       </div>
                     </div>
@@ -362,7 +373,16 @@ function Chat({ socket, username, room }) {
                   event.key === "Enter" && sendMessage();
                 }}
               />
-              <Button onClick={sendMessage}>&#9658;</Button>
+              <Button
+                onClick={sendMessage}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                &#9658;
+              </Button>
             </div>
 
             {/*Suggestion Buttons */}

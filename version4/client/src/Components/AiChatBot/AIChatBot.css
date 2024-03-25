@@ -1,9 +1,11 @@
 #root {
-  max-width: 1280px;
+  max-width: 100mw;
   margin: 0 auto;
   padding: 0; /* Remove padding */
   text-align: center;
 }
+
+
 
 .AIChatBot {
   display: flex;
@@ -67,3 +69,11 @@
 .chat-title {
   font-weight: bold; /* Bold font weight */
 }
+
+.chat-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust height as needed */
+}
+

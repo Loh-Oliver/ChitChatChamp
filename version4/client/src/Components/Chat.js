@@ -43,7 +43,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   const openai = new OpenAI({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
 
@@ -64,7 +64,7 @@ function Chat({ socket, username, room }) {
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: "translate to chinese." + text }],
+      messages: [{ role: "user", content: "translate to English." + text }],
     };
 
     try {
@@ -229,7 +229,9 @@ function Chat({ socket, username, room }) {
 
   return (
     <div>
+    
       <Grid container></Grid>
+      <h1>Lets talk about food(Chinese)</h1>
       <Grid container className={classes.chatSection}>
         <Grid item xs={3} className={classes.borderRight500}>
           <List>
@@ -308,7 +310,7 @@ function Chat({ socket, username, room }) {
                           <p id="author">{messageContent.author}</p>
                         </div>
                         <div className="Button-list">
-                          <Button
+                          <Button variant="contained"
                             variant="contained"
                             className="Button-speak"
                             onClick={() => speakMessage(messageContent.message)}
@@ -324,7 +326,7 @@ function Chat({ socket, username, room }) {
                             <RiSpeakLine style={{ marginRight: "5px" }} />{" "}
                           </Button>
 
-                          <Button
+                          <Button variant="contained"
                             variant="contained"
                             className="Button-translate"
                             startIcon={<BsTranslate />} // Use the BsTranslate icon as the start icon
@@ -375,7 +377,7 @@ function Chat({ socket, username, room }) {
                               }
                             }}
                           ></Button>
-                          <Button
+                          <Button variant="contained"
                             startIcon={<FaClipboardQuestion />} // Use the BsTranslate icon as the start icon
                             style={{
                               alignItems: "center",
@@ -410,7 +412,7 @@ function Chat({ socket, username, room }) {
                   event.key === "Enter" && sendMessage();
                 }}
               />
-              <Button
+              <Button variant="contained"
                 onClick={sendMessage}
                 style={{
                   display: "flex",
@@ -422,33 +424,39 @@ function Chat({ socket, username, room }) {
               </Button>
             </div>
 
-            {/*Suggestion Buttons */}
-            <Button
-              className="Button-suggest-1"
-              onClick={() => handleSendSuggestion(0)}
-              style={{ display: suggestions[0] ? "block" : "none" }}
-            >
-              {suggestions[0]}
-            </Button>
-
-            <Button
-              className="Button-suggest-2"
-              onClick={() => handleSendSuggestion(1)}
-              style={{ display: suggestions[1] ? "block" : "none" }}
-            >
-              {suggestions[1]}
-            </Button>
-
-            <Button
-              className="Button-suggest-3"
-              onClick={() => handleSendSuggestion(2)}
-              style={{ display: suggestions[2] ? "block" : "none" }}
-            >
-              {suggestions[2]}
-            </Button>
+           
           </div>
+          <div className="suggestion-buttons-container">
+  <Button variant="contained"
+    className="Button-suggest-1"
+    onClick={() => handleSendSuggestion(0)}
+    style={{ display: suggestions[0] ? "block" : "none" }}
+  >
+    {suggestions[0]}
+  </Button>
+
+  <Button variant="contained"
+    className="Button-suggest-2"
+    onClick={() => handleSendSuggestion(1)}
+    style={{ display: suggestions[1] ? "block" : "none" }}
+  >
+    {suggestions[1]}
+  </Button>
+
+  <Button variant="contained"
+    className="Button-suggest-3"
+    onClick={() => handleSendSuggestion(2)}
+    style={{ display: suggestions[2] ? "block" : "none" }}
+  >
+    {suggestions[2]}
+  </Button>
+</div>
+
         </Grid>
+   
       </Grid>
+       {/*Suggestion Buttons */}
+      
     </div>
   );
 }

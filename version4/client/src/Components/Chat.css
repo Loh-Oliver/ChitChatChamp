@@ -31,4 +31,20 @@
   display: inline-block;
 }
 
+/* Define styles for the suggestion buttons container */
+.suggestion-buttons-container {
+  width:85%; /* Set the width to 100% */
+  margin-top: 10px; /* Add some margin for spacing */
+}
+
+/* Define styles for the suggestion buttons */
+.Button-suggest-1,
+.Button-suggest-2,
+.Button-suggest-3 {
+  display: block; /* Set the display to block to stack the buttons vertically */
+  width: 100%; /* Set the width to 100% to fill the container width */
+  margin-top: 15px; /* Add some margin between buttons */
+}
+
+
 

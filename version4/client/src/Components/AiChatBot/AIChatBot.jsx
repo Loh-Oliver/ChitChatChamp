@@ -14,7 +14,7 @@ import NavBar from "../NavBar"
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter

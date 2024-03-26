@@ -4,22 +4,23 @@ import { useState } from "react";
 import Chat from "./Chat";
 import NavBar from "./NavBar";
 import Button from "@mui/material/Button";
-const socket = io.connect("http://localhost:3001");
-
-function Login() {
+/* const socket = io.connect("http://localhost:3001");
+console.log(socket) */
+function Login({ socket }) {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
-
+ 
   const joinRoom = (username, password) => {
-
     // Set the username and room state
     setUsername(username);
-   
-    const prefillRoom=1;
-    setRoom(prefillRoom)
+
+    const prefillRoom = 1;
+    setRoom(prefillRoom);
     // Emit the join_room event
-    socket.emit("join_room", prefillRoom);
+    
+    const img= socket.emit("join_room", prefillRoom);
+    console.log(img);
     setShowChat(true);
   };
 
@@ -43,8 +44,12 @@ function Login() {
               <p>I like chess and chinese</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={() => joinRoom("Justin", "123")}>Talk to him</Button>
-
+                <Button
+                  variant="contained"
+                  onClick={() => joinRoom("Justin", "123")}
+                >
+                  Talk to him
+                </Button>
               </div>
             </div>
             <div className="grid-item-1">
@@ -52,13 +57,16 @@ function Login() {
                 src="https://material-ui.com/static/images/avatar/1.jpg"
                 alt="Avatar"
               />
-              <h3>Nicola Cage 
-              </h3>
+              <h3>Nicola Cage</h3>
               <p>I like Beer and want to learn german</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={() => joinRoom("Oliver", "123")}>Talk to him</Button>
-
+                <Button
+                  variant="contained"
+                  onClick={() => joinRoom("Oliver", "123")}
+                >
+                  Talk to him
+                </Button>
               </div>
             </div>
             <div className="grid-item-1">
@@ -70,8 +78,12 @@ function Login() {
               <p>I like birds and want to learn korean</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={() => joinRoom("Nicholas", "123")}>Talk to him</Button>
-
+                <Button
+                  variant="contained"
+                  onClick={() => joinRoom("Nicholas", "123")}
+                >
+                  Talk to him
+                </Button>
               </div>
             </div>
 

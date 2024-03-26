@@ -11,15 +11,13 @@ function Login() {
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-  const joinRoom = () => {
-    // Prefill the username and room
-    const prefillUsername = "John"; // Set your default username here
-    const prefillRoom = "Room123"; // Set your default room here
+  const joinRoom = (username, password) => {
 
     // Set the username and room state
-    setUsername(prefillUsername);
-    setRoom(prefillRoom);
-
+    setUsername(username);
+   
+    const prefillRoom=1;
+    setRoom(prefillRoom)
     // Emit the join_room event
     socket.emit("join_room", prefillRoom);
     setShowChat(true);
@@ -45,7 +43,8 @@ function Login() {
               <p>I like chess and chinese</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
+                <Button variant="contained" onClick={() => joinRoom("Justin", "123")}>Talk to him</Button>
+
               </div>
             </div>
             <div className="grid-item-1">
@@ -58,7 +57,8 @@ function Login() {
               <p>I like Beer and want to learn german</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
+                <Button variant="contained" onClick={() => joinRoom("Oliver", "123")}>Talk to him</Button>
+
               </div>
             </div>
             <div className="grid-item-1">
@@ -70,7 +70,8 @@ function Login() {
               <p>I like birds and want to learn korean</p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
-                <Button variant="contained" onClick={joinRoom}>Talk to him</Button>
+                <Button variant="contained" onClick={() => joinRoom("Nicholas", "123")}>Talk to him</Button>
+
               </div>
             </div>
 

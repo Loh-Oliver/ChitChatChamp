@@ -14,7 +14,7 @@ import NavBar from "../NavBar"
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter
@@ -29,17 +29,23 @@ function AIChatBot() {
   const { speak, cancel } = useSpeechSynthesis(); // Destructure the speak and cancel functions
   const [speaking, setSpeaking] = useState(false); // Initialize speaking state
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const synth = window.speechSynthesis;
 
   const speakMessage = message => {
-    const { text } = message;
+    const newText = message.text;
+    console.log(newText);
+    const utterance = new SpeechSynthesisUtterance(newText);
+    utterance.lang = "zh-CN";
     if (speaking) {
       cancel(); // Stop speaking if already speaking
       setSpeaking(false); // Reset speaking state
     } else {
-      speak({ text, lang: "zh-CN" }); // Speak the message
+      synth.speak(utterance);
+      //speak({ text, lang: "zh-CN" }); // Speak the message
       setSpeaking(true); // Update speaking state
     }
   };
+
 
   useEffect(() => {
     console.log("Sending initial message...");

@@ -43,7 +43,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   const openai = new OpenAI({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
 
@@ -311,7 +311,6 @@ function Chat({ socket, username, room }) {
                         </div>
                         <div className="Button-list">
                           <Button variant="contained"
-                            variant="contained"
                             className="Button-speak"
                             onClick={() => speakMessage(messageContent.message)}
                             style={{
@@ -327,7 +326,6 @@ function Chat({ socket, username, room }) {
                           </Button>
 
                           <Button variant="contained"
-                            variant="contained"
                             className="Button-translate"
                             startIcon={<BsTranslate />} // Use the BsTranslate icon as the start icon
                             style={{
@@ -385,7 +383,6 @@ function Chat({ socket, username, room }) {
                               padding: "5px",
                               minWidth: "unset",
                             }}
-                            variant="contained"
                             className="Button-suggest"
                             onClick={() =>
                               getSuggestion(messageContent.message)

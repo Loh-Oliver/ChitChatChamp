@@ -5,20 +5,6 @@
   text-align: center;
 }
 
-
-
-/* .AIChatBot {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: calc(100vh - 64px);
-  margin-top: 64px;
-} */
-
-/* Your other styles */
-/* Your existing styles */
-
 .user-message {
   background-color: #4CAF50; /* Green background color for user messages */
   color: black; /* Text color */
@@ -81,8 +67,8 @@
 
 /* Chat Header Styles */
 .chat-header {
-
-  color: black; /* White text color */
+  background-color: #4CAF50;
+  color: white; /* White text color */
   padding: 10px; /* Padding */
   text-align: center; /* Center align text */
   font-size: 20px; /* Font size */

@@ -7,20 +7,20 @@ import {
   MessageList,
   Message,
   MessageInput,
-  TypingIndicator
+  TypingIndicator,
 } from "@chatscope/chat-ui-kit-react";
 import { useSpeechSynthesis } from "react-speech-kit"; // Import text-to-speech library
-import NavBar from "../NavBar"
+import NavBar from "../NavBar";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter
   const systemMessage = {
     role: "system",
-    content: `Start with ${language} and ask the student what they want to practice at the beginning. You are a language teacher. Point out grammatical, vocabulary, and spelling errors. Chat in the language that the student is learning and provide an English translation.`
+    content: `Start with ${language} and ask the student what they want to practice at the beginning. You are a language teacher. Point out grammatical, vocabulary, and spelling errors. Chat in the language that the student is learning and provide an English translation.`,
   };
   const [messages, setMessages] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
@@ -31,7 +31,7 @@ function AIChatBot() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const synth = window.speechSynthesis;
 
-  const speakMessage = message => {
+  const speakMessage = (message) => {
     const newText = message.text;
     console.log(newText);
     const utterance = new SpeechSynthesisUtterance(newText);
@@ -46,7 +46,6 @@ function AIChatBot() {
     }
   };
 
-
   useEffect(() => {
     console.log("Sending initial message...");
     if (!initialMessageSent) {
@@ -57,16 +56,18 @@ function AIChatBot() {
   }, []); // Empty dependency array to ensure the effect runs only once
 
   const sendMessageToChatGPT = async (message, include = true) => {
+    console.log(message);
     const newMessage = {
       message,
       direction: "outgoing",
-      sender: "user"
+      sender: "user",
     };
+    console.log(newMessage);
     let newMessages = [];
     if (!include) {
       newMessages = [...messages];
     } else {
-       newMessages = [...messages, newMessage]; // Append the new message
+      newMessages = [...messages, newMessage]; // Append the new message
     }
     setMessages(newMessages);
     setIsTyping(true);
@@ -78,7 +79,7 @@ function AIChatBot() {
   };
 
   async function processMessageToChatGPT(chatMessages, include = true) {
-    let apiMessages = chatMessages.map(messageObject => {
+    let apiMessages = chatMessages.map((messageObject) => {
       let role = messageObject.sender === "ChatGPT" ? "assistant" : "user";
       return { role: role, content: messageObject.message };
     });
@@ -86,15 +87,20 @@ function AIChatBot() {
     if (!include) {
       apiRequestBody = {
         model: "gpt-3.5-turbo",
-        messages: [systemMessage, ...apiMessages, {
-          role: "system",
-          content: "Give me 3 reply suggestions that the user can use to reply the system's prompt without acknowledging the user"
-        }]
+        messages: [
+          systemMessage,
+          ...apiMessages,
+          {
+            role: "system",
+            content:
+              "Give me 3 reply suggestions that the user can use to reply the system's prompt without acknowledging the user",
+          },
+        ],
       };
     } else {
       apiRequestBody = {
         model: "gpt-3.5-turbo",
-        messages: [systemMessage, ...apiMessages]
+        messages: [systemMessage, ...apiMessages],
       };
     }
     try {
@@ -104,10 +110,10 @@ function AIChatBot() {
           method: "POST",
           headers: {
             Authorization: "Bearer " + API_KEY,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(apiRequestBody)
-        }
+          body: JSON.stringify(apiRequestBody),
+        },
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -121,8 +127,8 @@ function AIChatBot() {
         ...chatMessages,
         {
           message: generatedMessage,
-          sender: "ChatGPT"
-        }
+          sender: "ChatGPT",
+        },
       ];
       setMessages(newMessages);
     } catch (error) {
@@ -132,7 +138,7 @@ function AIChatBot() {
     }
   }
 
-  const handleSend = message => {
+  const handleSend = (message) => {
     sendMessageToChatGPT(message);
   };
 
@@ -154,7 +160,7 @@ function AIChatBot() {
 
   return (
     <div className="App">
-<NavBar></NavBar>
+      <NavBar></NavBar>
       <div className="chat-header">
         <div className="chat-title">Currently practicing ({language})</div>
       </div>
@@ -168,14 +174,37 @@ function AIChatBot() {
               }
             >
               {messages.map((message, i) => (
-                <div key={i}>
-                  <Message model={message} style={{ fontSize: '24px' }} />
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column", // Change to column layout
+                    alignItems:
+                      message.sender === "user" ? "flex-end" : "flex-start",
+                  }}
+                >
+                  <div
+                    className={
+                      message.sender === "user" ? "user-message" : "bot-message"
+                    }
+                  >
+                    <p style={{ fontSize: "24px" }}>{message.message}</p>
+                  </div>
 
-                  <div>
-                    <Button variant="contained" onClick={() => speakMessage({ text: message.message })}>
+                  {/* Container for buttons */}
+                  <div className="button-container">
+                    <Button
+                      variant="contained"
+                      onClick={() => speakMessage({ text: message.message })}
+                      style={{ fontSize: "20px", color: "black"}}
+                    >
                       {speaking ? "Stop Speaking" : "Speak"}
                     </Button>
-                    <Button variant="contained" onClick={handleSuggestionButtonClick}>
+                    <Button
+                      variant="contained"
+                      onClick={handleSuggestionButtonClick}
+                      style={{ fontSize: "20px", color: "black"}}
+                    >
                       Get Suggestions
                     </Button>
                   </div>
@@ -196,9 +225,7 @@ function AIChatBot() {
           </ChatContainer>
         </MainContainer>
       </div>
-      
     </div>
-    
   );
 }
 

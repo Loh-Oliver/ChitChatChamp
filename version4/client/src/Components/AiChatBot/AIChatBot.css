@@ -7,17 +7,41 @@
 
 
 
-.AIChatBot {
+/* .AIChatBot {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 64px); /* Adjust the height to leave space for the navbar (assuming the navbar height is 64px) */
-  margin-top: 64px; /* Adjust the top margin to match the height of the header */
-}
+  height: calc(100vh - 64px);
+  margin-top: 64px;
+} */
 
 /* Your other styles */
+/* Your existing styles */
 
+.user-message {
+  background-color: #4CAF50; /* Green background color for user messages */
+  color: black; /* Text color */
+  border-radius: 15px; /* Border radius */
+  padding: 5px; /* Padding */
+  max-width: 70%; /* Maximum width of the message bubble */
+  margin-bottom: 5px; /* Bottom margin */
+}
+
+.bot-message {
+  background-color: #2196F3; /* Blue background color for messages from others */
+  color: black; /* Text color */
+  border-radius: 15px; /* Border radius */
+  padding: 5px; /* Padding */
+  max-width: 70%; /* Maximum width of the message bubble */
+  margin-bottom: 5px; /* Bottom margin */
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
 
 .logo {
   height: 6em;
@@ -74,6 +98,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Adjust height as needed */
+  height: 100vh;
 }
 

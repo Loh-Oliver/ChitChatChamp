@@ -43,7 +43,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   const openai = new OpenAI({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
 

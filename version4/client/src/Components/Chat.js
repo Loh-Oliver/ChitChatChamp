@@ -43,7 +43,7 @@ function Chat({ socket, username, room }) {
   const synth = window.speechSynthesis;
   const [suggestions, setSuggestions] = useState(Array(3).fill(""));
   //GPT translate
-  const API_KEY = "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";
+  const API_KEY = "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";
 
   const openai = new OpenAI({ apiKey: API_KEY, dangerouslyAllowBrowser: true });
 
@@ -64,7 +64,7 @@ function Chat({ socket, username, room }) {
   async function processSingleMessageToChatGPT(text) {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: "translate to English." + text }],
+      messages: [{ role: "user", content: "We are using english and chinese to talk. Help me translate to the other language: " + text }],
     };
 
     try {
@@ -100,7 +100,7 @@ function Chat({ socket, username, room }) {
       messages: [
         {
           role: "user",
-          content: "get me 3 easy suggestion to reply this" + text,
+          content: "get me 3 easy suggestion to reply this in chinese with bracket english translation " + text,
         },
       ],
     };

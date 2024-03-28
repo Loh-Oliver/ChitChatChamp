@@ -67,12 +67,10 @@
 
 /* Chat Header Styles */
 .chat-header {
-  background-color: #4CAF50;
-  color: white; /* White text color */
   padding: 10px; /* Padding */
   text-align: center; /* Center align text */
   font-size: 20px; /* Font size */
-  border-bottom: 2px solid #388E3C; /* Bottom border */
+
   width: 100%;
 }
 

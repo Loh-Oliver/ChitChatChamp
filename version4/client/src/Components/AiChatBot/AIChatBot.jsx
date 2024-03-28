@@ -14,7 +14,7 @@ import NavBar from "../NavBar";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 
-const API_KEY = "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";
+const API_KEY = "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";
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter
@@ -113,7 +113,7 @@ function AIChatBot() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(apiRequestBody),
-        },
+        }
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -159,13 +159,14 @@ function AIChatBot() {
   };
 
   async function getSuggestion(text) {
-   
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: [
         {
           role: "user",
-          content: "get me 3 suggestion to reply this text in chinese with bracket english translation: " + text,
+          content:
+            "get me 3 suggestion to reply this text in chinese with bracket english translation: " +
+            text,
         },
       ],
     };
@@ -202,7 +203,7 @@ function AIChatBot() {
 
   const handleSendSuggestion = (index) => {
     if (suggestions[index]) {
-      const message = suggestions[index].replace(/^\d+\.\s/, "").split('(')[0];
+      const message = suggestions[index].replace(/^\d+\.\s/, "").split("(")[0];
       sendMessageToChatGPT(message);
       setSuggestions(Array(3).fill("")); // Clear suggestions after sending
     }
@@ -214,7 +215,7 @@ function AIChatBot() {
       <div className="chat-header">
         <div className="chat-title">Currently practicing ({language})</div>
       </div>
-      <div style={{ position: "relative", height: "86vh", width: "100mw" }}>
+      <div style={{ position: "relative", height: "73vh", width: "100mw" }}>
         <MainContainer>
           <ChatContainer>
             <MessageList
@@ -246,14 +247,14 @@ function AIChatBot() {
                     <Button
                       variant="contained"
                       onClick={() => speakMessage({ text: message.message })}
-                      style={{ fontSize: "20px", color: "black"}}
+                      style={{ fontSize: "20px", color: "black" }}
                     >
                       {speaking ? "Stop Speaking" : "Speak"}
                     </Button>
                     <Button
                       variant="contained"
-                      onClick={handleSuggestionButtonClick}
-                      style={{ fontSize: "20px", color: "black"}}
+                      onClick={() => getSuggestion(message.message )}
+                      style={{ fontSize: "20px", color: "black" }}
                     >
                       Get Suggestions
                     </Button>
@@ -276,6 +277,32 @@ function AIChatBot() {
           </ChatContainer>
         </MainContainer>
       </div>
+      <Button
+        variant="contained"
+        className="Button-suggest-1"
+        onClick={() => handleSendSuggestion(0)}
+        style={{ display: suggestions[0] ? "block" : "none" }}
+      >
+        {suggestions[0]}
+      </Button>
+
+      <Button
+        variant="contained"
+        className="Button-suggest-2"
+        onClick={() => handleSendSuggestion(1)}
+        style={{ display: suggestions[1] ? "block" : "none" }}
+      >
+        {suggestions[1]}
+      </Button>
+
+      <Button
+        variant="contained"
+        className="Button-suggest-3"
+        onClick={() => handleSendSuggestion(2)}
+        style={{ display: suggestions[2] ? "block" : "none" }}
+      >
+        {suggestions[2]}
+      </Button>
     </div>
   );
 }

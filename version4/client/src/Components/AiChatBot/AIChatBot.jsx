@@ -14,7 +14,11 @@ import NavBar from "../NavBar";
 import { useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 
+<<<<<<< HEAD
 const API_KEY = "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";
+=======
+const API_KEY = "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";
+>>>>>>> df1417895420c3b59975b220ec6cf3ce4b490452
 
 function AIChatBot() {
   const { language } = useParams(); // Get the language parameter
@@ -113,7 +117,11 @@ function AIChatBot() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(apiRequestBody),
+<<<<<<< HEAD
         },
+=======
+        }
+>>>>>>> df1417895420c3b59975b220ec6cf3ce4b490452
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -158,13 +166,63 @@ function AIChatBot() {
     setShowSuggestions(true);
   };
 
+  async function getSuggestion(text) {
+   
+    const apiRequestBody = {
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: "get me 3 suggestion to reply this text in chinese with bracket english translation: " + text,
+        },
+      ],
+    };
+
+    try {
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(apiRequestBody),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log(data); // Check the response data structure
+      const generatedMessage = data.choices[0].message.content;
+      console.log(generatedMessage);
+      // Assuming the returned string is stored in a variable called suggestionsString
+      const suggestionsArray = generatedMessage.split("\n");
+      setSuggestions(suggestionsArray);
+    } catch (error) {
+      console.error("Error processing message:", error);
+      return null;
+    }
+  }
+
+  const handleSendSuggestion = (index) => {
+    if (suggestions[index]) {
+      const message = suggestions[index].replace(/^\d+\.\s/, "").split('(')[0];
+      sendMessageToChatGPT(message);
+      setSuggestions(Array(3).fill("")); // Clear suggestions after sending
+    }
+  };
+
   return (
     <div className="App">
       <NavBar></NavBar>
       <div className="chat-header">
         <div className="chat-title">Currently practicing ({language})</div>
       </div>
-      <div style={{ position: "relative", height: "800px", width: "100mw" }}>
+      <div style={{ position: "relative", height: "73vh", width: "100mw" }}>
         <MainContainer>
           <ChatContainer>
             <MessageList
@@ -177,6 +235,7 @@ function AIChatBot() {
                 <div
                   key={i}
                   style={{
+<<<<<<< HEAD
                     display: "flex",
                     flexDirection: "column", // Change to column layout
                     alignItems:
@@ -207,10 +266,52 @@ function AIChatBot() {
                     >
                       Get Suggestions
                     </Button>
+=======
+                    textAlign: message.sender === "ChatGPT" ? "left" : "right",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems:
+                        message.sender === "ChatGPT"
+                          ? "flex-start"
+                          : "flex-end",
+                    }}
+                  >
+                    <div
+                      style={{
+                        alignSelf:
+                          message.sender === "ChatGPT"
+                            ? "flex-start"
+                            : "flex-end",
+                          
+                      }}
+                    >
+                    <Message model={message} style={{ fontSize: "24px",  }} />
+                    
+                      <Button
+                        variant="contained"
+                        onClick={() => speakMessage({ text: message.message })}
+                      >
+                        {speaking ? "Stop Speaking" : "Speak"}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => (getSuggestion(  message.message ))}
+                    
+                      >
+                          
+                        Get Suggestions
+                      </Button>
+                    </div>
+>>>>>>> df1417895420c3b59975b220ec6cf3ce4b490452
                   </div>
                 </div>
               ))}
             </MessageList>
+
             <MessageInput placeholder="Type message here" onSend={handleSend} />
             {showSuggestions && (
               <div>
@@ -225,6 +326,32 @@ function AIChatBot() {
           </ChatContainer>
         </MainContainer>
       </div>
+<<<<<<< HEAD
+=======
+      <Button variant="contained"
+    className="Button-suggest-1"
+    onClick={() => handleSendSuggestion(0)}
+    style={{ display: suggestions[0] ? "block" : "none" }}
+  >
+    {suggestions[0]}
+  </Button>
+
+  <Button variant="contained"
+    className="Button-suggest-2"
+    onClick={() => handleSendSuggestion(1)}
+    style={{ display: suggestions[1] ? "block" : "none" }}
+  >
+    {suggestions[1]}
+  </Button>
+
+  <Button variant="contained"
+    className="Button-suggest-3"
+    onClick={() => handleSendSuggestion(2)}
+    style={{ display: suggestions[2] ? "block" : "none" }}
+  >
+    {suggestions[2]}
+  </Button>
+>>>>>>> df1417895420c3b59975b220ec6cf3ce4b490452
     </div>
   );
 }

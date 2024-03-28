@@ -20,7 +20,7 @@ function LanguageSelectionPage() {
       <div className="button-grid">
         <CustomButton onClick={() => handleLanguageSelect('English')} imageSrc="https://www.countryflags.com/wp-content/uploads/united-states-of-america-flag-png-large.png" buttonText="English" />
         <CustomButton onClick={() => handleLanguageSelect('Chinese')} imageSrc="https://www.countryflags.com/wp-content/uploads/china-flag-png-large.png" buttonText="Chinese" />
-        <CustomButton onClick={() => handleLanguageSelect('Spanish')} imageSrc="https://www.countryflags.com/wp-content/uploads/spain-flag-png-large.png" buttonText="Spanish" />
+        <CustomButton onClick={() => handleLanguageSelect('Indonesian')} imageSrc="https://www.countryflags.com/wp-content/uploads/indonesia-flag-png-large.png" buttonText="Indonesian" />
         <CustomButton onClick={() => handleLanguageSelect('French')} imageSrc="https://www.countryflags.com/wp-content/uploads/france-flag-png-large.png" buttonText="French" />
       </div>
       {selectedLanguage && (

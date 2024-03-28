@@ -78,8 +78,8 @@ function Login({ socket }) {
                 alt="Avatar"
               />
               <h3>Shawney Kingston</h3>
-              <p>Want to learn: German, Chinese</p>
-              <p>Interests: XMM, Birds, Prawning, Justin's GF</p>
+              <p>Want to learn: German</p>
+              <p>Interests: Gaming, Birds, Prawning </p>
               <div className="joinChatContainer">
                 {/* Remove the input fields for username and room */}
                 <Button
